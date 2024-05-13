@@ -52,14 +52,40 @@ int main()
 
     // 前後の窓を描画（再配置）
     cairo_set_source_rgb(cr, 0.53, 0.81, 0.92); // 水色
+
+    // border_radiusの値
+    double corner_radius = 5.0;
+
     // 運転席の窓
-    cairo_rectangle(cr, width / 2 - 95, height / 2 - 10, 60, 20);
+    cairo_move_to(cr, width / 2 - 95 + corner_radius, height / 2 - 10);
+    cairo_line_to(cr, width / 2 - 35 - corner_radius, height / 2 - 10);
+    cairo_arc(cr, width / 2 - 35 - corner_radius, height / 2 - 10 + corner_radius, corner_radius, 1.5 * M_PI, 2 * M_PI);
+    cairo_line_to(cr, width / 2 - 35, height / 2 + 10 - corner_radius);
+    cairo_arc(cr, width / 2 - 35 - corner_radius, height / 2 + 10 - corner_radius, corner_radius, 0, 0.5 * M_PI);
+    cairo_line_to(cr, width / 2 - 95 + corner_radius, height / 2 + 10);
+    cairo_arc(cr, width / 2 - 95 + corner_radius, height / 2 + 10 - corner_radius, corner_radius, 0.5 * M_PI, M_PI);
+    cairo_line_to(cr, width / 2 - 95, height / 2 - 10 + corner_radius);
+    cairo_arc(cr, width / 2 - 95 + corner_radius, height / 2 - 10 + corner_radius, corner_radius, M_PI, 1.5 * M_PI);
+    cairo_close_path(cr);
     cairo_fill(cr);
-    // 通常の窓
-    cairo_rectangle(cr, width / 2 - 25, height / 2 - 10, 40, 20);
-    cairo_fill(cr);
-    cairo_rectangle(cr, width / 2 + 20, height / 2 - 10, 40, 20);
-    cairo_fill(cr);
+
+    // 通常の窓（2つ）
+    double window_start_x = width / 2 - 25;
+    for (int i = 0; i < 2; i++)
+    {
+        cairo_move_to(cr, window_start_x + corner_radius, height / 2 - 10);
+        cairo_line_to(cr, window_start_x + 40 - corner_radius, height / 2 - 10);
+        cairo_arc(cr, window_start_x + 40 - corner_radius, height / 2 - 10 + corner_radius, corner_radius, 1.5 * M_PI, 2 * M_PI);
+        cairo_line_to(cr, window_start_x + 40, height / 2 + 10 - corner_radius);
+        cairo_arc(cr, window_start_x + 40 - corner_radius, height / 2 + 10 - corner_radius, corner_radius, 0, 0.5 * M_PI);
+        cairo_line_to(cr, window_start_x + corner_radius, height / 2 + 10);
+        cairo_arc(cr, window_start_x + corner_radius, height / 2 + 10 - corner_radius, corner_radius, 0.5 * M_PI, M_PI);
+        cairo_line_to(cr, window_start_x, height / 2 - 10 + corner_radius);
+        cairo_arc(cr, window_start_x + corner_radius, height / 2 - 10 + corner_radius, corner_radius, M_PI, 1.5 * M_PI);
+        cairo_close_path(cr);
+        cairo_fill(cr);
+        window_start_x += 65;
+    }
 
     // 描画をファイルに出力
     cairo_surface_write_to_png(surface, "car.png");
